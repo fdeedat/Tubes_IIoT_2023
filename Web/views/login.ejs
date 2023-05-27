@@ -1,40 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" type="text/css" href="styles.css"/>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Praktikum Gelombang Berdiri</title>
 </head>
 <body>
-    <h2>Praktikum Gelombang Berdiri</h2><br>
-    <div class="login">
-        <form id="login" method="get" action="login.php">
-            <label>
-                <b>
-                    NIM
-                </b>
-                <br>
-            </label>
-            <input type="text" name="Uname" id="Uname" placeholder="NIM">
-            <br>
-            <br>
-            <label>
-                <b>Password</b>
-            </label>
-            <input type="Password" name="Pass" id="Pass" placeholder="Password">
-            <br>
-            <br>
-            <button name="log" id="log" value="Log In Here"></button>
-            <!-- <input type="button" name="log" id="log" value="Log In Here"> -->
-            <br>
-            <br>
-            <input type="checkbox" id="check">
-                <span>Remember me</span>
-            <br>
-            <br>
-            <a href="#">Forgot Password</a>
+    <div>
+        <h1>Login</h1>
+        <form action="/login" method="POST">
+            <div class="form-group">
+                <label for="exampleInputEmail1">NIM</label>
+                <input type="NIM" name="NIM" class="form-control" id="NIMinput" aria-describedby="emailHelp">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputPassword1">Password</label>
+                <input type="password" name="password" class="form-control" id="exampleInputPassword1">
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
         </form>
     </div>
 </body>
