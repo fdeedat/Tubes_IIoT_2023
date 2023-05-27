@@ -4,7 +4,7 @@ const app = express();
 const socket = require('socket.io');
 const host = 'localhost';
 const hostMqtt = 'iot.tf.itb.ac.id';
-const port = 8000;
+const port = 3000;
 
 const client = mqtt.connect(`mqtt://${hostMqtt}:1883`);
 
@@ -16,7 +16,7 @@ app.set('view engine', 'ejs');
 app.set('views', './views');
 
 app.get('/',(req, res) => {
-    res.render("home");
+    res.render("login");
 });
 
 const server = app.listen(port, () => {
@@ -25,6 +25,7 @@ const server = app.listen(port, () => {
 
 const io = socket(server);
 
+// topic mqtt 
 const topic = 'deedat/iotkewren';
 
 // Getting the info from frontend via websocket
