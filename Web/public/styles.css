@@ -27,6 +27,13 @@
     width: 400px!important;
     background-color: dimgray;
 }
+
+.btn-danger.active{
+    color: white;
+    background-color: #198754;
+    border-color: #198754;
+}
+
 /* Media Queries untuk perangkat dengan lebar layar kurang dari 600px */
 @media (max-width: 600px) {
     /* Aturan CSS khusus untuk perangkat dengan lebar layar kurang dari 600px */
@@ -96,12 +103,4 @@ label{
     color: blue;
 
 
-}
-span{
-    color: white;
-    font-size: 17px;
-}
-a{
-    float: right;
-    background-color: grey;
 }

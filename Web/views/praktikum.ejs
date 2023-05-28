@@ -26,13 +26,32 @@
         Kamera
       </div>
       <div class="col-sm-auto">
-        <div class="row mb-3 mt-3">
-          <button id="button" type="button" class="btn btn-primary active" data-bs-toggle="button" aria-pressed="true">
+        <div class="row mt-3 ms-1 w-100">
+          <button id="button" type="button" class="btn btn-danger" data-bs-toggle="button" aria-pressed="true">
             <a id="buttonTitle">ON</a>
           </button>
         </div>
-        <div class="row">
-          <input type="number">
+        <div class="row mt-3">
+          <p class="ms-1">Frekuensi</p>
+          <div class="col">
+            <input type="number" class="ms-1 w-100">
+          </div>
+          <div class="col-sm-auto">
+            <span>Hz</span>
+          </div>
+        </div>
+        <div class="row mt-3">
+          <p class="ms-1">Beban</p>
+          <div class="col">
+            <input type="number" class="ms-1 w-100">
+          </div>
+          <div class="col-sm-auto">
+            <span>gr</span>
+          </div>
+        </div>
+        <div class="row mt-3 ms-1 w-100">
+          <button class="btn btn-primary"> Kirim </button>
+          <button class="btn"> Reset </button>
         </div>
       </div>
     </div>
@@ -40,5 +59,5 @@
 
 </body>
 <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
-<script src="script.js"></script>
+<script src="scriptPrak.js"></script>
 </html>
