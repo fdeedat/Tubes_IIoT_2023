@@ -1,0 +1,35 @@
+<link rel="stylesheet" href="styles.css">
+<body>
+    <header class="position-sticky top-0 start-0">
+          <nav class="navbar navbar-expand-sm navbar-light">
+              <div class="container-fluid shadow justify-content-start">
+                <div class="dropdown">
+                    <button class="btn btn-primary p-1 me-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="/icons8-stack-60.png" class="icon_nav" alt="...">
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li><button class="dropdown-item" type="button">Modul 1</button></li>
+                        <li><button class="dropdown-item" type="button">Modul 2</button></li>
+                        <li><button class="dropdown-item" type="button">Modul 3</button></li>
+                    </ul>
+                </div>
+                <h1><%= modul %></h1>
+                <h1 class="judul"><%= nPage %></h1>
+                <div class="flex-grow-1"></div>
+                <div class="identitas flex-grow-2">
+                    <p><%= nama %></p>
+                </div>
+                <div class="dropdown">
+                    <button class="btn border p-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="/icons8-user-menu-male-60.png" class="icon_nav" alt="...">
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><p class="dropdown-item-text"><%= nama %></p></li>
+                        <li><p class="dropdown-item-text"><%= nim %></p></li>
+                        <li><button class="dropdown-item keluar" type="button">LogOut</button></li>
+                    </ul>
+                </div>
+              </div>
+          </nav>
+    </header>
+</body>
