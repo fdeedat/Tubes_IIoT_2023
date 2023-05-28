@@ -8,6 +8,6 @@ const db = new sqlite3.Database('./loginData.db',sqlite3.OPEN_READWRITE,(err)=>{
 // CREATE TABLE users(nama,NIM,password)
 // DROP TABLE users
 let sql = `
-    CREATE TABLE users(nama,NIM,password)
+    CREATE TABLE users(nama,NIM,password)   
 `;
 db.run(sql);

@@ -11,6 +11,8 @@ const bcrypt = require("bcrypt")
 const flash = require('express-flash')
 const session = require('express-session')
 const methodOverride = require('method-override')
+const bodyParser = require('body-parser')
+const webrtc = require("wrtc")
 
 // Server's parameters
 const host = 'localhost';
@@ -29,6 +31,8 @@ const initPassport = require("./data/passport-config.js")
 // middleware & static files
 app.use(express.static('./public'));
 app.use(express.urlencoded({ extended: false}));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true}));
 app.use(flash());
 app.use(session({
     secret: process.env.SESSION_SECRET,
@@ -39,7 +43,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(methodOverride('_method'));
 
-let userTemp = [];
+// Controllers
+const {homeAdmin} = require('./controller/admin');
+const {logout,postRegister,checkAuthenticated,checkNotAuthenticated} = require('./controller/logger');
 
 let sql = `SELECT * FROM users`;
 db.all(sql, [], (err,rows)=>{
@@ -50,17 +56,14 @@ db.all(sql, [], (err,rows)=>{
 
 initPassport(
     passport,
-    NIM => userTemp.find(user => user.NIM === NIM),
-    userTemp
+    NIM => userTemp.find(user => user.NIM === NIM)
 );
+    
+let userTemp = [];
 
 // view engine
 app.set('view engine', 'ejs');
 app.set('views', './views');
-
-// Controllers
-const {homeAdmin,adminCreate,adminDelete} = require('./controller/admin');
-const {logout,postRegister,checkAuthenticated,checkNotAuthenticated} = require('./controller/logger');
 
 // mqtt things 
 const client = mqtt.connect(`mqtt://${hostMqtt}:1883`);
@@ -68,28 +71,78 @@ const topic = 'deedat/iotkewren';
 
 // admin stuffs
 app.get('/admin',homeAdmin);
-app.get('/admin/delete',adminCreate);
-app.get('/admin/create',adminDelete);
+
+// name nim
+let userName, userNim;
 
 //route thingyszzszz
+app.get('/videoHost',(req,res)=>res.render('videoHost'));
 app.get('/',checkNotAuthenticated,(req, res) => res.render("login"));
-app.get('/praktikum',checkAuthenticated,(req, res) => res.render("praktikum"));
+app.get('/praktikum',checkAuthenticated,(req, res) => {
+    const userData = {
+        name: userName,
+        nim: userNim
+    };
+    res.render("praktikum",{userData});
+});
 app.get('/register',checkNotAuthenticated,(req, res) => res.render("register"));
 
 // post thingyisszzzz
 app.post('/register',checkNotAuthenticated, postRegister);
 app.delete('/logout',logout);
-app.post('/login',checkNotAuthenticated, passport.authenticate('local',{
+app.post('/login',checkNotAuthenticated,passport.authenticate('local',{
     successRedirect: '/praktikum',
     failureRedirect: '/',
     failureFlash: true
     }
 ));
+app.post("/consumer", async ({ body }, res) => {
+    const peer = new webrtc.RTCPeerConnection({
+        iceServers: [
+            {
+                urls: "stun:stun.stunprotocol.org"
+            }
+        ]
+    });
+    const desc = new webrtc.RTCSessionDescription(body.sdp);
+    await peer.setRemoteDescription(desc);
+    senderStream.getTracks().forEach(track => peer.addTrack(track, senderStream));
+    const answer = await peer.createAnswer();
+    await peer.setLocalDescription(answer);
+    const payload = {
+        sdp: peer.localDescription
+    }
+
+    res.json(payload);
+});
+
+app.post('/broadcast', async ({ body }, res) => {
+    const peer = new webrtc.RTCPeerConnection({
+        iceServers: [
+            {
+                urls: "stun:stun.stunprotocol.org"
+            }
+        ]
+    });
+    peer.ontrack = (e) => handleTrackEvent(e, peer);
+    const desc = new webrtc.RTCSessionDescription(body.sdp);
+    await peer.setRemoteDescription(desc);
+    const answer = await peer.createAnswer();
+    await peer.setLocalDescription(answer);
+    const payload = {
+        sdp: peer.localDescription
+    }
+    res.json(payload);
+});
+
+function handleTrackEvent(e, peer) {
+    senderStream = e.streams[0];
+};
 
 server.listen(port, () => {
     console.log(`App is running on ${host}:${port}`);
-    let sql = `SELECT * FROM users`;
-    db.all(sql, [], (err,rows)=>{
+    let query = `SELECT * FROM users`;
+    db.all(query, [], (err,rows)=>{
         if(err) return console.error(err.message);
         userTemp = [];
         userTemp = rows;

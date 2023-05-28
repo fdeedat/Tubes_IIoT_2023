@@ -32,6 +32,14 @@ const postRegister = async(req,res)=>{
                 console.log(`inserted users name, NIM, and pass: ${userName}, ${NIM}, ${hashedPassword}`);
             };
         });
+        // userTemp.push({
+        //     nama: userName,
+        //     NIM: NIM,
+        //     password: hashedPassword
+        // });
+        // // console.log(tempObj);
+        // // userTemp.push(tempObj);
+        // console.log(userTemp);
         res.redirect("/");
     }catch{
         res.redirect('/register');
@@ -49,8 +57,8 @@ const checkNotAuthenticated = (req, res, next)=> {
     if (req.isAuthenticated()) {
         return res.redirect('/praktikum')
     }
-    next()
-}
+    next();
+};
 
 module.exports = {
     logout,

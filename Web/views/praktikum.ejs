@@ -10,7 +10,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
 </head>
 <body>
-  <!-- <%= modul='Modul 1',nPage='Gelombang Berdiri',nama='Deedat Fatahillah',nim='13320072'; %> -->
+  <!-- <%= modul='Modul 1',nPage='Gelombang Berdiri',nama= userData.nama ,nim= userData.NIM; %> -->
+  <%= userData.nama %>
   <%- include("./components/navbar"); %>
 
   <div class="container-fluid !direction pt-3 px-4">
@@ -20,9 +21,8 @@
       </div>
     </div>
     <div class="row">
-      <div class="col kamera">
-        Kamera
-      </div>
+      <video autoplay class="col" id="video">
+      </video>
       <div class="col-sm-auto">
         <div class="row mt-3 ms-1 w-100">
           <button id="button" type="button" class="btn btn-danger" data-bs-toggle="button" aria-pressed="true">
@@ -48,8 +48,8 @@
           </div>
         </div>
         <div class="row mt-3 ms-1 w-100">
-          <button class="btn btn-primary"> Kirim </button>
-          <button class="btn"> Reset </button>
+          <button class="btn btn-primary" id="sendButton"> Kirim </button>
+          <button class="btn" id="resetButton"> Reset </button>
         </div>
       </div>
     </div>
@@ -57,5 +57,6 @@
 
 </body>
 <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" defer></script>
 <script src="scriptPrak.js"></script>
 </html>
