@@ -5,21 +5,16 @@ socket.connect(`http://${host}:8000`);
 // DOM things
 const btn = document.getElementById('button');
 const btnTitle = document.getElementById("buttonTitle");
-<<<<<<< Updated upstream
-=======
 const sendButton = document.getElementById("sendButton");
 const resetButton = document.getElementById("resetButton");
 let freqInput = document.getElementById("freqInput"),
     bebanInput = document.getElementById("bebanInput")
 
 
->>>>>>> Stashed changes
 btnTitle.innerHTML = "DISCONNECTED";
 
 // Callback function for click event
 btn.addEventListener('click', sendOverSocket);
-<<<<<<< Updated upstream
-=======
 sendButton.addEventListener('click',callbackSend);
 // resetButton.addEventListener('click',callbackReset);
 function sendBtn() {
@@ -36,7 +31,6 @@ function resetBtn() {
     console.log(freqInput);
     console.log(bebanInput);
 };
->>>>>>> Stashed changes
 
 //init state
 let currentState = 0;
