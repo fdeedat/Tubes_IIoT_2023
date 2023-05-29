@@ -57,7 +57,9 @@ app.set('views', './views');
 
 // mqtt things 
 const client = mqtt.connect(`mqtt://${hostMqtt}:1883`);
-const topic = 'deedat/iotkewren';
+const topicButton = 'K03/buttonState';
+const topicInputFreq = 'K03/frekuensi';
+const topicInputBeban = 'K03/beban';
 
 // admin stuffs
 app.get('/admin',homeAdmin);
@@ -68,7 +70,7 @@ app.get('/videoHost',(req,res)=>{
     app.post('/broadcast', async ({ body }, res) => {
         const peer = new webrtc.RTCPeerConnection({
             iceServers: [
-                {
+                { 
                     urls: "stun:stun.stunprotocol.org"
                 }
             ]
@@ -142,6 +144,11 @@ io.on('connection', (socket) => {
     console.log(socket.id);
     socket.on('buttonState', (stream) => {
         console.log(stream,socket.id);
-        client.publish(topic,`${stream.state}`);
+        client.publish(topicButton,`${stream.state}`);
     });
+    socket.on('inputSys', (stream)=>{
+        console.log(stream,socket.id);
+        client.publish(topicInputFreq, `${stream.solFreq}`);
+        client.publish(topicInputBeban, `${stream.bebanCell}`);
+    })
 });
