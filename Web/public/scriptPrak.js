@@ -5,8 +5,6 @@ socket.connect(`http://${host}:8000`);
 // DOM things
 const btn = document.getElementById('button');
 const btnTitle = document.getElementById("buttonTitle");
-let freqInput = document.getElementById("freqInput").value;
-let bebanInput = document.getElementById("bebanInput").value;
 const sendButton = document.getElementById("sendButton");
 const resetButton = document.getElementById("resetButton");
 
@@ -15,12 +13,7 @@ btnTitle.innerHTML = "DISCONNECTED";
 // Callback function for click event
 btn.addEventListener('click', sendOverSocket);
 sendButton.addEventListener('click',callbackSend);
-// resetButton.addEventListener('click',callbackReset);
-
-function callbackSend(){
-    console.log(freqInput);
-    console.log(bebanInput);
-};
+resetButton.addEventListener('click',callbackReset);
 
 //init state
 let currentState = 0;
@@ -40,6 +33,26 @@ async function sendOverSocket() {
         currentState=0;
         btnTitle.innerHTML = "DISCONNECTED";
     }
+};
+
+async function callbackSend() {
+    // add dom things @catur
+    let freqInput = document.getElementById("freqInput").value;
+    let bebanInput = document.getElementById("bebanInput").value;
+    await socket.emit('inputSys',{
+        solFreq : freqInput,
+        bebanCell : bebanInput
+    });
+};
+
+async function callbackReset() {
+    // add dom things @catur
+    document.getElementById("freqInput").value = '';
+    document.getElementById("bebanInput").value = '';
+    await socket.emit('inputSys',{
+        solFreq : '0',
+        bebanCell : '0'
+    });
 };
 
 window.onload = () => {
