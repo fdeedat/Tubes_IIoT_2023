@@ -48,7 +48,8 @@ app.use(methodOverride('_method'));
 const {homeAdmin} = require('./controller/admin');
 const {logout,postRegister,checkAuthenticated,checkNotAuthenticated} = require('./controller/logger');
 
-initPassport(passport);
+let tempData = {};
+initPassport.initialize(passport);
 
 // view engine
 app.set('view engine', 'ejs');
@@ -101,26 +102,26 @@ app.get('/videoHost',(req,res)=>{
         res.json(payload);
     });
 });
-let tempData = {};
-app.get('/',checkNotAuthenticated,(req, res) => res.render("login"));
-app.get('/praktikum',checkAuthenticated,(req, res) => {
-    res.render("praktikum",{nama: tempData.nama , nim: tempData.nim});
-});
-app.get('/register',checkNotAuthenticated,(req, res) => res.render("register"));
-
 
 // post thingyisszzzz
 app.post('/register',checkNotAuthenticated, postRegister);
 app.delete('/logout',logout);
-app.post('/login',checkNotAuthenticated,(req,res)=>{
-    tempData.nama = req.body.nama;
-    tempData.nim = req.body.NIM
-},passport.authenticate('local',{
+app.post('/login',checkNotAuthenticated,passport.authenticate('local',{
     successRedirect: '/praktikum',
     failureRedirect: '/',
     failureFlash: true
-    }   
-));
+    })
+);
+
+app.get('/',checkNotAuthenticated,(req, res) => {
+    res.render("login");
+});
+app.get('/praktikum',checkAuthenticated,(req, res) => {
+    console.log(tempData);
+    res.render("praktikum",{tempData});
+});
+app.get('/register',checkNotAuthenticated,(req, res) => res.render("register"));
+
 
 function handleTrackEvent(e, peer) {
     senderStream = e.streams[0];

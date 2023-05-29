@@ -10,7 +10,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
 </head>
 <body>
-  <!-- <%= modul='Modul 1',nPage='Gelombang Berdiri',nama= nama ,nim= nim; %> -->
+  <!-- <%= modul='Modul 1',nPage='Gelombang Berdiri',nama= 'Praktikum Fisika Dasar' ,nim= "Institut Teknologi Bandung"; %> -->
   <%- include("./components/navbar"); %>
 
   <div class="container-fluid !direction pt-3 px-4">
@@ -31,7 +31,7 @@
         <div class="row mt-3">
           <p class="ms-1">Frekuensi</p>
           <div class="col">
-            <input type="number" class="ms-1 w-100">
+            <input type="number" class="ms-1 w-100" id="freqInput">
           </div>
           <div class="col-sm-auto">
             <span>Hz</span>
@@ -40,7 +40,7 @@
         <div class="row mt-3">
           <p class="ms-1">Beban</p>
           <div class="col">
-            <input type="number" class="ms-1 w-100">
+            <input type="number" class="ms-1 w-100" id="bebanInput">
           </div>
           <div class="col-sm-auto">
             <span>gr</span>
@@ -53,7 +53,6 @@
       </div>
     </div>
   </div>
-
 </body>
 <script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" defer></script>

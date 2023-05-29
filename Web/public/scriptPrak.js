@@ -5,10 +5,42 @@ socket.connect(`http://${host}:8000`);
 // DOM things
 const btn = document.getElementById('button');
 const btnTitle = document.getElementById("buttonTitle");
+let freqInput = document.getElementById("freqInput").value;
+let bebanInput = document.getElementById("bebanInput").value;
+const sendButton = document.getElementById("sendButton");
+const resetButton = document.getElementById("resetButton");
+
 btnTitle.innerHTML = "DISCONNECTED";
 
 // Callback function for click event
 btn.addEventListener('click', sendOverSocket);
+sendButton.addEventListener('click',callbackSend);
+// resetButton.addEventListener('click',callbackReset);
+
+function callbackSend(){
+    console.log(freqInput);
+    console.log(bebanInput);
+};
+
+//init state
+let currentState = 0;
+
+async function sendOverSocket() {
+    console.log('button clicked');
+    if (currentState === 0){
+        await socket.emit('buttonState', {
+            state: 1,
+        });
+        currentState = 1;
+        btnTitle.innerHTML = "CONNECTED";
+    }else{
+        await socket.emit('buttonState', {
+            state: 0
+        });
+        currentState=0;
+        btnTitle.innerHTML = "DISCONNECTED";
+    }
+};
 
 window.onload = () => {
     init();
@@ -47,24 +79,4 @@ async function handleNegotiationNeededEvent(peer) {
 
 function handleTrackEvent(e) {
     document.getElementById("video").srcObject = e.streams[0];
-};
-
-//init state
-let currentState = 0;
-
-async function sendOverSocket() {
-    console.log('button clicked');
-    if (currentState === 0){
-        await socket.emit('buttonState', {
-            state: 1,
-        });
-        currentState = 1;
-        btnTitle.innerHTML = "CONNECTED";
-    }else{
-        await socket.emit('buttonState', {
-            state: 0
-        });
-        currentState=0;
-        btnTitle.innerHTML = "DISCONNECTED";
-    }
 };
