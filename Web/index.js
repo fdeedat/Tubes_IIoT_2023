@@ -18,6 +18,7 @@ const webrtc = require("wrtc")
 const host = 'localhost';
 const hostMqtt = 'iot.tf.itb.ac.id';
 const port = 3000;
+let senderStream;
 
 // database thingy
 const sqlite3 = require('sqlite3').verbose();
@@ -47,19 +48,7 @@ app.use(methodOverride('_method'));
 const {homeAdmin} = require('./controller/admin');
 const {logout,postRegister,checkAuthenticated,checkNotAuthenticated} = require('./controller/logger');
 
-let sql = `SELECT * FROM users`;
-db.all(sql, [], (err,rows)=>{
-    if(err) return console.error(err.message);
-    userTemp = [];
-    userTemp = rows;
-});
-
-initPassport(
-    passport,
-    NIM => userTemp.find(user => user.NIM === NIM)
-);
-    
-let userTemp = [];
+initPassport(passport);
 
 // view engine
 app.set('view engine', 'ejs');
@@ -72,68 +61,66 @@ const topic = 'deedat/iotkewren';
 // admin stuffs
 app.get('/admin',homeAdmin);
 
-// name nim
-let userName, userNim;
-
 //route thingyszzszz
-app.get('/videoHost',(req,res)=>res.render('videoHost'));
+app.get('/videoHost',(req,res)=>{
+    res.render('videoHost');
+    app.post('/broadcast', async ({ body }, res) => {
+        const peer = new webrtc.RTCPeerConnection({
+            iceServers: [
+                {
+                    urls: "stun:stun.stunprotocol.org"
+                }
+            ]
+        });
+        peer.ontrack = (e) => handleTrackEvent(e, peer);
+        const desc = new webrtc.RTCSessionDescription(body.sdp);
+        await peer.setRemoteDescription(desc);
+        const answer = await peer.createAnswer();
+        await peer.setLocalDescription(answer);
+        const payload = {
+            sdp: peer.localDescription
+        }
+        res.json(payload);
+    });
+    app.post("/consumer", async ({ body }, res) => {
+        const peer = new webrtc.RTCPeerConnection({
+            iceServers: [
+                {
+                    urls: "stun:stun.stunprotocol.org"
+                }
+            ]
+        });
+        const desc = new webrtc.RTCSessionDescription(body.sdp);
+        await peer.setRemoteDescription(desc);
+        senderStream.getTracks().forEach(track => peer.addTrack(track, senderStream));
+        const answer = await peer.createAnswer();
+        await peer.setLocalDescription(answer);
+        const payload = {
+            sdp: peer.localDescription
+        }
+        res.json(payload);
+    });
+});
+let tempData = {};
 app.get('/',checkNotAuthenticated,(req, res) => res.render("login"));
 app.get('/praktikum',checkAuthenticated,(req, res) => {
-    const userData = {
-        name: userName,
-        nim: userNim
-    };
-    res.render("praktikum",{userData});
+    res.render("praktikum",{nama: tempData.nama , nim: tempData.nim});
 });
 app.get('/register',checkNotAuthenticated,(req, res) => res.render("register"));
+
 
 // post thingyisszzzz
 app.post('/register',checkNotAuthenticated, postRegister);
 app.delete('/logout',logout);
-app.post('/login',checkNotAuthenticated,passport.authenticate('local',{
+app.post('/login',checkNotAuthenticated,(req,res)=>{
+    tempData.nama = req.body.nama;
+    tempData.nim = req.body.NIM
+},passport.authenticate('local',{
     successRedirect: '/praktikum',
     failureRedirect: '/',
     failureFlash: true
-    }
+    }   
 ));
-app.post("/consumer", async ({ body }, res) => {
-    const peer = new webrtc.RTCPeerConnection({
-        iceServers: [
-            {
-                urls: "stun:stun.stunprotocol.org"
-            }
-        ]
-    });
-    const desc = new webrtc.RTCSessionDescription(body.sdp);
-    await peer.setRemoteDescription(desc);
-    senderStream.getTracks().forEach(track => peer.addTrack(track, senderStream));
-    const answer = await peer.createAnswer();
-    await peer.setLocalDescription(answer);
-    const payload = {
-        sdp: peer.localDescription
-    }
-
-    res.json(payload);
-});
-
-app.post('/broadcast', async ({ body }, res) => {
-    const peer = new webrtc.RTCPeerConnection({
-        iceServers: [
-            {
-                urls: "stun:stun.stunprotocol.org"
-            }
-        ]
-    });
-    peer.ontrack = (e) => handleTrackEvent(e, peer);
-    const desc = new webrtc.RTCSessionDescription(body.sdp);
-    await peer.setRemoteDescription(desc);
-    const answer = await peer.createAnswer();
-    await peer.setLocalDescription(answer);
-    const payload = {
-        sdp: peer.localDescription
-    }
-    res.json(payload);
-});
 
 function handleTrackEvent(e, peer) {
     senderStream = e.streams[0];

@@ -17,14 +17,15 @@ const postRegister = async(req,res)=>{
     console.log(req.body);
     const NIM = req.body.NIM;
     const userName = req.body.name;
+    const id = Date.now().toString();
     try{
         const hashedPassword = await bcrypt.hash(req.body.password,10);
         // insert NIM dan password ke database 
         let insert = `
-            INSERT INTO users(nama,NIM,password)
-            VALUES(?,?,?)
+            INSERT INTO users(id,nama,NIM,password)
+            VALUES(?,?,?,?)
             `;
-        let values = [userName,NIM,hashedPassword]
+        let values = [id,userName,NIM,hashedPassword]
         db.run(insert,values,(err)=>{
             if(err){
                 console.error(err.message);
@@ -32,14 +33,6 @@ const postRegister = async(req,res)=>{
                 console.log(`inserted users name, NIM, and pass: ${userName}, ${NIM}, ${hashedPassword}`);
             };
         });
-        // userTemp.push({
-        //     nama: userName,
-        //     NIM: NIM,
-        //     password: hashedPassword
-        // });
-        // // console.log(tempObj);
-        // // userTemp.push(tempObj);
-        // console.log(userTemp);
         res.redirect("/");
     }catch{
         res.redirect('/register');

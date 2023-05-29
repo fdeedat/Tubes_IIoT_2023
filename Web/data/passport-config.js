@@ -1,51 +1,36 @@
 const LocalStrategy = require('passport-local').Strategy
 const bcrypt = require('bcrypt')
+// database thingy
+const sqlite3 = require('sqlite3').verbose();
+const db = new sqlite3.Database('./data/loginData.db',sqlite3.OPEN_READWRITE,(err)=>{
+    if (err) return console.error(err.message);
+});
 
-function initialize(passport,getUserByNIM){
-    passport.use(
-      new LocalStrategy({ usernameField: 'NIM' }, (NIM, password, done) => {
-        // Match user
-        const userFound = getUserByNIM(NIM);
-        if(userFound === undefined||null) return done(null,false, { message: 'NIM tidak terdaftar'});
-        bcrypt.compare(password, userFound.password, (err, isMatch) => {
-        if (err) throw err;
-        if (isMatch) {
-            return done(null, userFound);
-        } else {
-            return done(null, false, { message: 'Password incorrect' });
+function initialize(passport){
+  console.log(passport);
+  passport.use(
+    new LocalStrategy({usernameField: 'NIM'},(NIM, password, done)=>{
+      db.get('SELECT * FROM users WHERE NIM = ?', NIM, (err,row)=>{
+        if(err) return done(err);
+        if(!row) return done(null,false,{message: "Tidak ada NIM"});
+        bcrypt.compare(password, row.password, (err, result) => {
+          if (err) {
+            return done(err);
           }
+          if (!result) {
+            return done(null, false, { message: 'Incorrect password.' });
+          }
+          return done(null, row);
         });
-      })
-    );
-  passport.serializeUser((user, done) => done(null,user.NIM));
-  passport.deserializeUser((NIM,done) => {
-    return done(null, getUserByNIM(NIM))
-  })
+      });
+    })
+  );
+  passport.serializeUser((user,done)=>done(null,user.id));
+  passport.deserializeUser((id,done)=> {
+    db.get('SELECT * FROM users WHERE id = ?', id, (err,row)=>{
+      done(err,row);
+    });
+  });
 };
-
-// function initialize(passport, getUserByNIM, getUserByName) {
-//   const authenticateUser = async (NIM, password, done) => {
-//     const user = getUserByNIM(NIM)
-//     if (user == undefined) {
-//       return done(null, false, { message: 'No user with that email' })
-//     }
-
-//     try {
-//       if (await bcrypt.compare(password, user.password)) {
-//         return done(null, user)
-//       } else {
-//         return done(null, false, { message: 'Password incorrect' })
-//       }
-//     } catch (e) {
-//       return done(e)
-//     }
-//   }
-
-//   passport.use(new LocalStrategy({ usernameField: 'NIM' }, authenticateUser))
-//   passport.serializeUser((user, done) => done(null, user.name))
-//   passport.deserializeUser((name, done) => {
-//     return done(null, getUserByName(name))
-//   })
-// }
 
 module.exports = initialize;
