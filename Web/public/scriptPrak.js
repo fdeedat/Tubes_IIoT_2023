@@ -5,8 +5,6 @@ socket.connect(`http://${host}:8000`);
 // DOM things
 const btn = document.getElementById('button');
 const btnTitle = document.getElementById("buttonTitle");
-let freqInput = document.getElementById("freqInput").value; // catur ntar benerin
-let bebanInput = document.getElementById("bebanInput").value; // catur ntar benerin
 const sendButton = document.getElementById("sendButton");
 const resetButton = document.getElementById("resetButton");
 
@@ -39,6 +37,8 @@ async function sendOverSocket() {
 
 async function callbackSend() {
     // add dom things @catur
+    let freqInput = document.getElementById("freqInput").value;
+    let bebanInput = document.getElementById("bebanInput").value;
     await socket.emit('inputSys',{
         solFreq : freqInput,
         bebanCell : bebanInput
@@ -47,6 +47,8 @@ async function callbackSend() {
 
 async function callbackReset() {
     // add dom things @catur
+    document.getElementById("freqInput").value = '';
+    document.getElementById("bebanInput").value = '';
     await socket.emit('inputSys',{
         solFreq : '0',
         bebanCell : '0'
