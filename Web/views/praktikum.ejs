@@ -10,7 +10,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
 </head>
 <body>
-  <!-- <%= modul='Modul 1',nPage='Gelombang Berdiri',nama= 'Praktikum Fisika Dasar' ,nim= "Institut Teknologi Bandung"; %> -->
+  <!-- <%= modul='Modul 1',nPage='Gelombang Berdiri',nama= 'Laboratorium Fisika Dasar' ,nim= "Institut Teknologi Bandung"; %> -->
   <%- include("./components/navbar"); %>
 
   <div class="container-fluid !direction pt-3 px-4">
@@ -20,9 +20,10 @@
       </div>
     </div>
     <div class="row">
-      <video autoplay class="col" id="video">
-      </video>
-      <div class="col-sm-auto">
+      <div class="col">
+        <video autoplay class="w-100" id="video"></video>
+      </div>
+      <div class="col-md-auto">
         <div class="row mt-3 ms-1 w-100">
           <button id="button" type="button" class="btn btn-danger" data-bs-toggle="button" aria-pressed="true">
             <a id="buttonTitle">ON</a>
@@ -34,9 +35,10 @@
             <input type="number" class="ms-1 w-100" id="freqInput">
           </div>
           <div class="col-sm-auto">
-            <span>Hz</span>
+            <span class="col">Hz</span>
           </div>
         </div>
+        <button class="btn btn-primary mt-3 ms-1 w-100" id="sendFreq"> Kirim Frekuensi </button>
         <div class="row mt-3">
           <p class="ms-1">Beban</p>
           <div class="col">
@@ -46,8 +48,8 @@
             <span>gr</span>
           </div>
         </div>
+        <button class="btn btn-primary mt-3 ms-1 w-100" id="sendBeban"> Kirim Beban </button>
         <div class="row mt-3 ms-1 w-100">
-          <button class="btn btn-primary" id="sendButton"> Kirim </button>
           <button class="btn" id="resetButton"> Reset </button>
         </div>
       </div>

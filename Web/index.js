@@ -141,14 +141,19 @@ server.listen(port, () => {
 
 // Getting the info from frontend via websocket
 io.on('connection', (socket) => {
+    client.publish("K03/sistemState",'0');
     console.log(socket.id);
     socket.on('buttonState', (stream) => {
         console.log(stream,socket.id);
         client.publish(topicButton,`${stream.state}`);
     });
-    socket.on('inputSys', (stream)=>{
+    socket.on('inputFreq', (stream)=>{
         console.log(stream,socket.id);
         client.publish(topicInputFreq, `${stream.solFreq}`);
+        // client.publish(topicInputBeban, `${stream.bebanCell}`);
+    });
+    socket.on('inputBeban',(stream)=>{
+        console.log(stream,socket.id);
         client.publish(topicInputBeban, `${stream.bebanCell}`);
-    })
+    });
 });

@@ -5,14 +5,16 @@ socket.connect(`http://${host}:8000`);
 // DOM things
 const btn = document.getElementById('button');
 const btnTitle = document.getElementById("buttonTitle");
-const sendButton = document.getElementById("sendButton");
 const resetButton = document.getElementById("resetButton");
+const sendFreq = document.getElementById("sendFreq");
+const sendBeban = document.getElementById("sendBeban");
 
 btnTitle.innerHTML = "DISCONNECTED";
 
 // Callback function for click event
 btn.addEventListener('click', sendOverSocket);
-sendButton.addEventListener('click',callbackSend);
+sendFreq.addEventListener('click',callbackSendFreq);
+sendBeban.addEventListener('click',callbackSendBeban);
 resetButton.addEventListener('click',callbackReset);
 
 //init state
@@ -35,12 +37,20 @@ async function sendOverSocket() {
     }
 };
 
-async function callbackSend() {
+async function callbackSendFreq() {
     // add dom things @catur
     let freqInput = document.getElementById("freqInput").value;
+    // let bebanInput = document.getElementById("bebanInput").value;
+    await socket.emit('inputFreq',{
+        solFreq : freqInput
+    });
+};
+
+async function callbackSendBeban() {
+    // add dom things @catur
+    // let freqInput = document.getElementById("freqInput").value;
     let bebanInput = document.getElementById("bebanInput").value;
-    await socket.emit('inputSys',{
-        solFreq : freqInput,
+    await socket.emit('inputBeban',{
         bebanCell : bebanInput
     });
 };
@@ -49,15 +59,19 @@ async function callbackReset() {
     // add dom things @catur
     document.getElementById("freqInput").value = '';
     document.getElementById("bebanInput").value = '';
-    await socket.emit('inputSys',{
-        solFreq : '0',
+    await socket.emit('inputBeban',{
         bebanCell : '0'
+    });
+    await socket.emit('inputFreq',{
+        solFreq : '0'
     });
 };
 
 window.onload = () => {
-    init();
-};
+    document.getElementById("button").onclick = ()=>{
+        init();
+    }
+}
 
 async function init() {
     const peer = createPeer();
