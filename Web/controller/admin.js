@@ -16,7 +16,6 @@ const homeAdmin = (req, res) => {
         console.log(userTemp);
     });
 }
-
 module.exports = {
     homeAdmin,
 };

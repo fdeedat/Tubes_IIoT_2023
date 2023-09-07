@@ -43,7 +43,6 @@ let tempData =[];
 //       });
 //     }
 // }
-
 function initialize(passport){
   console.log(passport);
   passport.use(

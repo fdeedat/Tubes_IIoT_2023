@@ -10,4 +10,5 @@ const db = new sqlite3.Database('./loginData.db',sqlite3.OPEN_READWRITE,(err)=>{
 let sql = `
 CREATE TABLE users(id,nama,NIM,password) 
 `;
+
 db.run(sql);
