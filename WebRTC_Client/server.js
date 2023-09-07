@@ -14,7 +14,6 @@ app.get('/', (req, res) => {
 // app.get('/host',(req,res)=>{
 //   res.render('host')
 // })
-
 app.get('/:room', (req, res) => {
   res.render('room', { roomId: req.params.room })
 })
